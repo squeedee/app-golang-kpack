@@ -13,12 +13,20 @@ import (
 
 const defaultPort = "3000"
 
+func name() string {
+	n := os.Getenv("CARTO_RUN_WORKLOAD_NAME")
+	if n == "" {
+		return "golang-web-app"
+	}
+	return n
+}
+
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte("golang-web-app is alive"))
+		_, err := w.Write([]byte(fmt.Sprintf("%s is alive", name())))
 		if err != nil {
 			logrus.Fatalf("unable to write to buffer %v", err)
 		}
@@ -32,7 +40,7 @@ func main() {
 	})
 
 	r.Get("/ready", func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte("golang-web-app is alive"))
+		_, err := w.Write([]byte(fmt.Sprintf("%s is alive", name())))
 		if err != nil {
 			logrus.Fatalf("unable to write to buffer %v", err)
 		}

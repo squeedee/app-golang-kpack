@@ -43,9 +43,22 @@ spec:
         type: string
       - name: source-revision
         type: string
+      stepTemplate:
+        securityContext:
+          runAsUser: 1000
+          runAsNonRoot: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          seccompProfile:
+            type: RuntimeDefault
       steps:
       - image: golang
         name: test
+        env:
+        - name: HOME
+          value: /go
         script: |
           cd `mktemp -d`
           wget -qO- $(params.source-url) | tar xvz -m
